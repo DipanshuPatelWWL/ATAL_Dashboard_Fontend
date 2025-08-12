@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Pagination from "@mui/material/Pagination";
 
 import {
@@ -105,7 +104,7 @@ const Categories = () => {
     }
 
     try {
-      const response = await API.post("/category/addcategory",
+      const response = await API.post("/addcategory",
         formData
       );
 
@@ -135,7 +134,7 @@ const Categories = () => {
   const fetchCategory = async () => {
     try {
       const response = await API.get(
-        "/category/getcategory"
+        "/getcategory"
       );
 
       if (!response.ok) {
@@ -167,7 +166,7 @@ const Categories = () => {
       if (result.isConfirmed) {
         try {
           const response = await API.delete(
-            `/category/deletecategory/${id}`
+            `/deletecategory/${id}`
           );
           if (response.status === 200) {
             Swal.fire("Deleted!", "Category has been deleted.", "success");
@@ -208,7 +207,7 @@ const Categories = () => {
 
     try {
       const response = await API.put(
-        `/category/updatecategory/${editData.id}`,
+        `/updatecategory/${editData.id}`,
         { categoryname: editData.categoryname }
       );
 
