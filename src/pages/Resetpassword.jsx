@@ -12,6 +12,7 @@ import {
   InputAdornment,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import API from '../API/Api';
 
 const Resetpassword = () => {
   const { token } = useParams();
@@ -40,7 +41,7 @@ const Resetpassword = () => {
     }
 
     try {
-      const response = await axios.put('http://localhost:4000/category/passworupdate', {
+      const response = await API.put('/category/passworupdate', {
         token,
         password,
       });

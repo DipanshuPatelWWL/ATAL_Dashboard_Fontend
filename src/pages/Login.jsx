@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import Forgetpassword from './Forgetpassword';
 import Swal from "sweetalert2";
 import axios from 'axios';
+import API from '../API/Api';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -84,7 +85,7 @@ const Login = ({ setIsLoggedIn }) => {
     }
 
     try {
-      const response = await axios.post('http://localhost:4000/category/forgetpassword', { email });
+      const response = await API.post('/category/forgetpassword', { email });
 
       if (response.status === 200) {
         Swal.fire({
@@ -139,7 +140,7 @@ const Login = ({ setIsLoggedIn }) => {
       </Grid>
 
       <Forgetpassword open={openForget} handleClose={handleClose}
-        email={email} setEmail={setEmail} handleSubmit={handleSubmit}/>
+        email={email} setEmail={setEmail} handleSubmit={handleSubmit} />
     </Grid>
   );
 };
