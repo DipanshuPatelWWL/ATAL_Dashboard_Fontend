@@ -135,7 +135,7 @@ const Categories = () => {
   const fetchCategory = async () => {
     try {
       const response = await API.get(
-        "/category/getcategory/"
+        "/category/getcategory"
       );
 
       if (!response.ok) {
