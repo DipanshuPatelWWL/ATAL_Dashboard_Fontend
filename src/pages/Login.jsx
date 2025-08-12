@@ -37,7 +37,7 @@ const Login = ({ setIsLoggedIn }) => {
     }
 
     try {
-      const response = await API.post(`${API_URL}/category/login`, {
+      const response = await API.post(`${API_URL}/login`, {
         username: trimmedUsername,
         password: trimmedPassword
       });
