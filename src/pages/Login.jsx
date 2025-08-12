@@ -12,7 +12,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import Forgetpassword from './Forgetpassword';
 import Swal from "sweetalert2";
-import axios from 'axios';
+// import axios from 'axios';
 import API from '../API/Api';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -37,7 +37,7 @@ const Login = ({ setIsLoggedIn }) => {
     }
 
     try {
-      const response = await axios.post(`${API_URL}/login`, {
+      const response = await API.post(`${API_URL}/login`, {
         username: trimmedUsername,
         password: trimmedPassword
       });
