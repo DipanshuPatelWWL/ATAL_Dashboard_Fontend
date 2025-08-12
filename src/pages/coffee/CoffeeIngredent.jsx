@@ -58,7 +58,7 @@ const CoffeeIngredent = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredCoffee, setFilteredCoffee] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-   const [isEditMode, setIsEditMode] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
   const [editingCoffeeId, setEditingCoffeeId] = useState(null);
   const rowsPerPage = 5;
 
@@ -92,7 +92,7 @@ const CoffeeIngredent = () => {
 
   const fetchCategory = async () => {
     try {
-      const response = await fetch("http://localhost:4000/category/getcategory/");
+      const response = await API.get("/getcategory");
       const result = await response.json();
       const formatted = result.data.map((item) => ({
         value: item.categoryname,
@@ -116,60 +116,60 @@ const CoffeeIngredent = () => {
     setIngredientsList((prev) => prev.filter((_, i) => i !== index));
   };
 
-const handleSubmit = async () => {
-  if (selected.length === 0) {
-    setFormErrors((prev) => ({
-      ...prev,
-      cat_sec: "Please select at least one category",
-    }));
-    return;
-  }
-
-  if (ingredientsList.length === 0) {
-    Swal.fire({ icon: "error", title: "Error", text: "Please add at least one ingredient." });
-    return;
-  }
-
-  const form = {
-    categoryname: selected.map((item) => item.value),
-    ingredients: JSON.stringify(ingredientsList), 
-  };
-
-  try {
-    let response;
-
-    if (isEditMode && editingCoffeeId) {
-      
-      response = await axios.put(`http://localhost:4000/category/updatecoffee/${editingCoffeeId}`, form);
-    } else {
-     
-      response = await axios.post("http://localhost:4000/category/coffeeadd", form);
+  const handleSubmit = async () => {
+    if (selected.length === 0) {
+      setFormErrors((prev) => ({
+        ...prev,
+        cat_sec: "Please select at least one category",
+      }));
+      return;
     }
 
-    if (response.status === 200) {
-      Swal.fire({
-        icon: "success",
-        title: isEditMode ? "Updated" : "Added",
-        text: isEditMode ? "Coffee updated successfully!" : "Coffee added successfully!",
-      });
-      handleClose();
-      fetchCoffee();
-    } else {
+    if (ingredientsList.length === 0) {
+      Swal.fire({ icon: "error", title: "Error", text: "Please add at least one ingredient." });
+      return;
+    }
+
+    const form = {
+      categoryname: selected.map((item) => item.value),
+      ingredients: JSON.stringify(ingredientsList),
+    };
+
+    try {
+      let response;
+
+      if (isEditMode && editingCoffeeId) {
+
+        response = await axios.put(`http://localhost:4000/category/updatecoffee/${editingCoffeeId}`, form);
+      } else {
+
+        response = await axios.post("http://localhost:4000/category/coffeeadd", form);
+      }
+
+      if (response.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: isEditMode ? "Updated" : "Added",
+          text: isEditMode ? "Coffee updated successfully!" : "Coffee added successfully!",
+        });
+        handleClose();
+        fetchCoffee();
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Operation failed.",
+        });
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Operation failed.",
+        text: "There was an error submitting the form.",
       });
     }
-  } catch (error) {
-    console.error("Error submitting form:", error);
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "There was an error submitting the form.",
-    });
-  }
-};
+  };
 
 
   const fetchCoffee = async () => {
@@ -232,8 +232,8 @@ const handleSubmit = async () => {
       }
     });
   };
-  
- const handleEdit = (coffeeData) => {
+
+  const handleEdit = (coffeeData) => {
     setIsEditMode(true);
     setEditingCoffeeId(coffeeData._id);
 
@@ -275,10 +275,10 @@ const handleSubmit = async () => {
           />
         </Grid>
 
-      
+
         <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
           <DialogTitle>{isEditMode ? "Edit Coffee Product" : "Add Coffee Product"}</DialogTitle>
-            <DialogContent>
+          <DialogContent>
             <Select
               options={category}
               isMulti
@@ -324,14 +324,14 @@ const handleSubmit = async () => {
             <Button onClick={handleClose} color="error" variant="outlined">
               Cancel
             </Button>
-            <Button onClick={handleSubmit} color="success"variant="contained">
+            <Button onClick={handleSubmit} color="success" variant="contained">
               Submit
             </Button>
           </DialogActions>
         </Dialog>
       </Grid>
 
-    
+
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TableContainer component={Paper}>
@@ -371,7 +371,7 @@ const handleSubmit = async () => {
             </Table>
           </TableContainer>
 
-      
+
           {filteredCoffee?.length > rowsPerPage && (
             <div className="text-center mt-3">
               <Pagination

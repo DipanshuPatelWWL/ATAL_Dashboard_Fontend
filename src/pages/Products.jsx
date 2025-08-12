@@ -16,7 +16,6 @@ import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import Select from "react-select";
 import Swal from "sweetalert2";
-import axios from "axios";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -27,6 +26,7 @@ import TableRow from "@mui/material/TableRow";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Pagination from "@mui/material/Pagination";
+import API from "../API/Api";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -240,13 +240,13 @@ const Products = () => {
     try {
       let response;
       if (isEditMode) {
-        response = await axios.put(
-          `http://localhost:4000/category/updateproduct/${editId}`,
+        response = await API.put(
+          `/updateproduct/${editId}`,
           form
         );
       } else {
-        response = await axios.post(
-          "http://localhost:4000/category/addproduct/",
+        response = await API.post(
+          "/addproduct/",
           form
         );
       }
@@ -295,14 +295,14 @@ const Products = () => {
     setSelected(selectedOptions);
 
     if (product.image) {
-      setImage(`http://localhost:4000/uploads/${product.image}`);
+      setImage(`https://atal-backend.onrender.com/uploads/${product.image}`);
     }
   };
 
   const fetchCategory = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:4000/category/getcategory/"
+      const response = await API.get(
+        "/getcategory/"
       );
       if (!response.ok) throw new Error("Network response was not ok");
 
@@ -319,7 +319,7 @@ const Products = () => {
 
   const fetchProduct = async () => {
     try {
-      const response = await fetch("http://localhost:4000/category/getproduct");
+      const response = await API.get("/getproduct");
       if (!response.ok) throw new Error("Network response was not ok");
 
       const product = await response.json();
@@ -346,8 +346,8 @@ const Products = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.delete(
-            `http://localhost:4000/category/deleteproduct/${id}`
+          const response = await API.delete(
+            `/deleteproduct/${id}`
           );
           if (response.status === 200) {
             Swal.fire("Deleted!", "Product has been deleted.", "success");
@@ -572,7 +572,7 @@ const Products = () => {
           <Typography variant="h6" gutterBottom sx={{ display: "flex", flexWrap: "wrap", marginTop: 2 }}>
             ABOUT LENS 1
           </Typography>
-          
+
           <TextField
             label="Lens title"
             name="pro_name"
@@ -583,38 +583,38 @@ const Products = () => {
             error={Boolean(formErrors.pro_name)}
             helperText={formErrors.pro_name}
           />
-         
+
           <TextField
-                label="Description"
-                name="description"
-                value={productDetails.description}
-                onChange={handleChange1}
-                multiline
-                rows={4}
-                fullWidth
-                margin="dense"
-              />
+            label="Description"
+            name="description"
+            value={productDetails.description}
+            onChange={handleChange1}
+            multiline
+            rows={4}
+            fullWidth
+            margin="dense"
+          />
 
-               <input
-              type="file"
-              id="product-gallery"
-              multiple
-              accept="image/*"
-              style={{ display: "none" }}
-              onChange={handleImageChange1}
-            />
+          <input
+            type="file"
+            id="product-gallery"
+            multiple
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={handleImageChange1}
+          />
 
-            {/* Label to trigger file input */}
-            <label htmlFor="product-gallery">
-              <Button variant="contained" component="span">
-                Select Product Gallery
-              </Button>
-            </label>
+          {/* Label to trigger file input */}
+          <label htmlFor="product-gallery">
+            <Button variant="contained" component="span">
+              Select Product Gallery
+            </Button>
+          </label>
 
-            <Typography variant="h6" gutterBottom sx={{ display: "flex", flexWrap: "wrap", marginTop: 2 }}>
+          <Typography variant="h6" gutterBottom sx={{ display: "flex", flexWrap: "wrap", marginTop: 2 }}>
             ABOUT LENS 2
           </Typography>
-          
+
           <TextField
             label="lens title"
             name="pro_name"
@@ -625,35 +625,35 @@ const Products = () => {
             error={Boolean(formErrors.pro_name)}
             helperText={formErrors.pro_name}
           />
-         
+
           <TextField
-                label="Description"
-                name="description"
-                value={productDetails.description}
-                onChange={handleChange}
-                multiline
-                rows={4}
-                fullWidth
-                margin="dense"
-              />
+            label="Description"
+            name="description"
+            value={productDetails.description}
+            onChange={handleChange}
+            multiline
+            rows={4}
+            fullWidth
+            margin="dense"
+          />
 
-              <input
-              type="file"
-              id="product-gallery"
-              multiple
-              accept="image/*"
-              style={{ display: "none" }}
-              onChange={handleImageChange}
-            />
+          <input
+            type="file"
+            id="product-gallery"
+            multiple
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={handleImageChange}
+          />
 
-            {/* Label to trigger file input */}
-            <label htmlFor="product-gallery" >
-              <Button variant="contained" component="span">
-                Select Product Gallery
-              </Button>
-            </label>
+          {/* Label to trigger file input */}
+          <label htmlFor="product-gallery" >
+            <Button variant="contained" component="span">
+              Select Product Gallery
+            </Button>
+          </label>
         </DialogContent>
-        
+
 
         <DialogActions>
           <Button onClick={handleClose} color="error" variant="contained">
