@@ -1,0 +1,126 @@
+
+@import '@fontsource/lora/index.css';
+@import "tailwindcss";
+
+body {
+  font-family: 'Lora', serif;
+  margin: 0;
+  padding: 0;
+ 
+}
+
+.sidebar {
+  background-color: black; 
+  padding: 20px;
+  position: relative;
+  height: auto;
+  overflow-y: auto; 
+  overflow-x: hidden;
+}
+.sidebar_menu{
+  height: 100%;
+  overflow-y: auto;
+
+}
+.menu_list .MuiListItemText-primary {
+  color: white;
+  font-size: 18px;
+ 
+}
+.css-z2qibm-MuiListItem-root{
+  line-height: 0.5 !important;
+  padding: 0px !important;
+}
+.img-fluid{
+  width: 160px ;
+  margin: 0px 0px 0px 0px;
+}
+.brt {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: #fff;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+
+.header_grid{
+  background: red;
+  color: #fff;
+ 
+}
+.header_logo{
+  padding: 10px 10px;
+}
+
+.footer {
+  
+  background-color: black;
+  color: #fff;
+  padding: 10px 20px;
+  margin-top: auto;
+}
+
+
+.header_menu {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.icon{
+  color: #fff;
+  margin-right: 3px;
+  padding-bottom: 5px;
+}
+
+.search{
+  width: 400px !important;
+  float: inline-end !important;
+}
+.dilog_box {
+  width: 800px !important;
+}
+.icon_update{
+	padding-right: 20px !important;
+}
+.pagination{
+  padding-bottom: 20px;
+  padding-top: 10px;
+  display: flex;
+  justify-content: space-around;
+}
+.icon_delete{
+  color: red;
+  cursor:pointer;
+}
+.icon_update{
+  color: #1976d2;
+  cursor: pointer;
+}
+.pro_grid{
+  padding: 20px !important;
+  align-items: center;
+  justify-content: space-between;
+}
+.product_grid{
+  text-align: left;
+}
+.pro_search{
+ text-align: right;
+}
+.search_pro{
+  width: 400px !important;
+}
+.custom_search{
+  padding: 8.5px 3px !important;
+}
+
+.file_upload{
+  cursor: pointer;
+  margin-top: 14px;
+}
+
+@media (max-width: 768px) {
+
+}
