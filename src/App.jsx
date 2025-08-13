@@ -17,24 +17,28 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login"
+        <Route
+          path="/login"
           element={
             isLoggedIn ? <Navigate to="/" /> : <Login setIsLoggedIn={setIsLoggedIn} />
           }
         />
         <Route path="/Resetpassword/:token" element={<Resetpassword />} />
-        <Route
-          path="/*"
-          element={
-            isLoggedIn ? (
-              <Dashboard setIsLoggedIn={setIsLoggedIn} />
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
+
+        {/* Protected Routes */}
+        {isLoggedIn ? (
+          <>
+            <Route path="/" element={<Dashboard setIsLoggedIn={setIsLoggedIn} />} />
+            <Route path="/categories" element={<Categories />} />
+            {/* You can keep wildcard for 404 or other dashboard routes */}
+            <Route path="/*" element={<Dashboard setIsLoggedIn={setIsLoggedIn} />} />
+          </>
+        ) : (
+          <Route path="/*" element={<Navigate to="/login" />} />
+        )}
       </Routes>
     </BrowserRouter>
+
   );
 };
 
