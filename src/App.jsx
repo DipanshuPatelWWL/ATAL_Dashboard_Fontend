@@ -5,6 +5,7 @@ import Dashboard from './components/Dashboard';
 import Login from './pages/Login';
 import Resetpassword from './pages/Resetpassword';
 import './App.css';
+import Categories from './pages/categories';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
