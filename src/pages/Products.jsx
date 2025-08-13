@@ -697,7 +697,7 @@ const Products = () => {
                     <StyledTableCell align="center">
                       {product.image && (
                         <img
-                          src={`http://localhost:4000/uploads/${product.image}`}
+                          src={`https://atal-backend.onrender.com/uploads/${product.image}`}
                           alt="product"
                           width="80"
                         />
