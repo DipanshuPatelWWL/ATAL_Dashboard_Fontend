@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Pagination from "@mui/material/Pagination";
-
 import {
   Grid,
   Button,
@@ -46,45 +45,57 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const Categories = () => {
-  const [category, setCategory] = useState();
+  const [category, setCategory] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredData, setFilteredData] = useState(category);
+  const [filteredData, setFilteredData] = useState([]);
   const rowsPerPage = 5;
+
   useEffect(() => {
-    const filtered = category?.filter((cat) =>
+    const filtered = category.filter((cat) =>
       cat.categoryname.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredData(filtered);
     setCurrentPage(1);
   }, [searchQuery, category]);
+
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentRows = filteredData?.slice(indexOfFirstRow, indexOfLastRow);
+  const currentRows = filteredData.slice(indexOfFirstRow, indexOfLastRow);
+
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   };
-  const [formData, setFormData] = useState({ categoryname: "", });
+
+  const [formData, setFormData] = useState({ categoryname: "" });
   const [formErrors, setFormErrors] = useState({ categoryname: "" });
   const [open, setOpen] = useState(false);
+
   const handleCateAdd = () => {
     setOpen(true);
   };
+
   const handleClose = () => {
     setOpen(false);
     setFormData({ categoryname: "" });
+    setFormErrors({ categoryname: "" });
   };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setFormData({ ...formData, [name]: value });
 
-    // Frontend validation
     if (name === "categoryname") {
       if (!value.trim()) {
-        setFormErrors({ ...formErrors, categoryname: "Category name cannot be empty!" });
+        setFormErrors({
+          ...formErrors,
+          categoryname: "Category name cannot be empty!",
+        });
       } else if (value.trim().length < 2) {
-        setFormErrors({ ...formErrors, categoryname: "Minimum 2 characters required." });
+        setFormErrors({
+          ...formErrors,
+          categoryname: "Minimum 2 characters required.",
+        });
       } else {
         setFormErrors({ ...formErrors, categoryname: "" });
       }
@@ -93,7 +104,6 @@ const Categories = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
 
     if (!formData.categoryname.trim()) {
       setFormErrors({ categoryname: "Category name cannot be empty!" });
@@ -104,9 +114,7 @@ const Categories = () => {
     }
 
     try {
-      const response = await API.post("/addcategory",
-        formData
-      );
+      const response = await API.post("/addcategory", formData);
 
       if (response.status === 200) {
         Swal.fire({
@@ -120,31 +128,21 @@ const Categories = () => {
     } catch (error) {
       handleClose();
       console.error("Error:", error);
-      const errorMsg =
-        error.response?.data?.message || "Something went wrong!";
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: errorMsg,
+        text: error.response?.data?.message || "Something went wrong!",
       });
     }
   };
 
-
   const fetchCategory = async () => {
     try {
-      const response = await API.get(
-        "/getcategory"
-      );
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const category = await response.json();
-      setCategory(category.data);
+      const response = await API.get("/getcategory");
+      setCategory(response.data.data || []);
     } catch (error) {
       console.error("There was an error fetching the category:", error);
+      Swal.fire("Error!", "Failed to fetch categories.", "error");
     }
   };
 
@@ -164,12 +162,9 @@ const Categories = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await API.delete(
-            `/deletecategory/${id}`
-          );
+          const response = await API.delete(`/deletecategory/${id}`);
           if (response.status === 200) {
             Swal.fire("Deleted!", "Category has been deleted.", "success");
-
             fetchCategory();
           } else {
             Swal.fire("Error!", "Failed to delete the category.", "error");
@@ -185,7 +180,6 @@ const Categories = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [editData, setEditData] = useState({ id: "", categoryname: "" });
 
-
   const handleEdit = (cat) => {
     setEditData({ id: cat._id, categoryname: cat.categoryname });
     setOpenEdit(true);
@@ -194,6 +188,7 @@ const Categories = () => {
   const handleCloseEdit = () => {
     setOpenEdit(false);
   };
+
   const handleChange1 = (e) => {
     setEditData({ ...editData, categoryname: e.target.value });
   };
@@ -205,10 +200,9 @@ const Categories = () => {
     }
 
     try {
-      const response = await API.put(
-        `/updatecategory/${editData.id}`,
-        { categoryname: editData.categoryname }
-      );
+      const response = await API.put(`/updatecategory/${editData.id}`, {
+        categoryname: editData.categoryname,
+      });
 
       if (response.status === 200) {
         Swal.fire("Updated!", "Category updated successfully.", "success");
@@ -223,49 +217,70 @@ const Categories = () => {
     }
   };
 
-
   return (
     <>
       <Grid container spacing={2}>
-        <Grid item xs={4} style={{ padding: "30px" }} className="add_cat">
-          <Button variant="contained" color="success" className="add_cat_btn" onClick={handleCateAdd}>
-            <AddIcon />ADD NEW Category</Button>
-          <Dialog open={open} onClose={handleClose} classes={{ paper: "dilog_box" }}>
+        {/* Add Category */}
+        <Grid item xs={4} style={{ padding: "30px" }}>
+          <Button
+            variant="contained"
+            color="success"
+            onClick={handleCateAdd}
+          >
+            <AddIcon /> ADD NEW Category
+          </Button>
+          <Dialog open={open} onClose={handleClose}>
             <DialogTitle>Add New Category</DialogTitle>
-            <DialogContent className="a1">
-              <TextField label="Category Name" variant="outlined" fullWidth margin="dense"
-                name="categoryname" value={formData.categoryname} onChange={handleChange} error={Boolean(formErrors.categoryname)}
-                helperText={formErrors.categoryname} />
-
+            <DialogContent>
+              <TextField
+                label="Category Name"
+                variant="outlined"
+                fullWidth
+                margin="dense"
+                name="categoryname"
+                value={formData.categoryname}
+                onChange={handleChange}
+                error={Boolean(formErrors.categoryname)}
+                helperText={formErrors.categoryname}
+              />
             </DialogContent>
-            <DialogActions className="a2">
-              <Button onClick={handleClose} color="error" variant="outlined">{" "}Cancel</Button>
-              <Button onClick={handleSubmit} color="success" variant="contained">
+            <DialogActions>
+              <Button onClick={handleClose} color="error" variant="outlined">
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSubmit}
+                color="success"
+                variant="contained"
+              >
                 Add Category
               </Button>
             </DialogActions>
           </Dialog>
         </Grid>
 
-        {/* Search Box */}
-        <Grid item xs={8} style={{ padding: "30px" }} className="search_cat">
-          <TextField className="search" variant="outlined" placeholder="Search..." fullWidth
-            value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+        {/* Search */}
+        <Grid item xs={8} style={{ padding: "30px" }}>
+          <TextField
+            variant="outlined"
+            placeholder="Search..."
+            fullWidth
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             InputProps={{
               startAdornment: (
-                <InputAdornment className="search_box" position="start">
+                <InputAdornment position="start">
                   <SearchIcon />
                 </InputAdornment>
               ),
-              classes: {
-                input: 'custom_search',
-              },
             }}
           />
         </Grid>
-        <Grid item xs={12} className="table">
+
+        {/* Table */}
+        <Grid item xs={12}>
           <TableContainer component={Paper}>
-            <Table className="table_data">
+            <Table>
               <TableHead>
                 <TableRow>
                   <StyledTableCell>Category Name</StyledTableCell>
@@ -275,23 +290,25 @@ const Categories = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {currentRows?.map((cat, index) => (
+                {currentRows.map((cat, index) => (
                   <StyledTableRow key={index}>
-                    <StyledTableCell component="th" scope="row">
-                      {cat.categoryname}
-                    </StyledTableCell>
+                    <StyledTableCell>{cat.categoryname}</StyledTableCell>
                     <StyledTableCell align="center">
-                      {cat.ingredients}
+                      {cat.updatedAt}
                     </StyledTableCell>
                     <StyledTableCell align="center">
                       {cat.createdAt}
                     </StyledTableCell>
-                    <StyledTableCell align="center" className="icon_add">
-                      <EditIcon className="icon_update" onClick={() => handleEdit(cat)} />
-                      <DeleteIcon className="icon_delete" onClick={() => handleDelete(cat._id)} />
+                    <StyledTableCell align="center">
+                      <EditIcon
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleEdit(cat)}
+                      />
+                      <DeleteIcon
+                        style={{ cursor: "pointer", color: "red", marginLeft: "10px" }}
+                        onClick={() => handleDelete(cat._id)}
+                      />
                     </StyledTableCell>
-
-
                   </StyledTableRow>
                 ))}
               </TableBody>
@@ -299,14 +316,20 @@ const Categories = () => {
           </TableContainer>
 
           {/* Pagination */}
-          {filteredData?.length > rowsPerPage && (
+          {filteredData.length > rowsPerPage && (
             <div className="text-center mt-3">
-              <Pagination count={Math.ceil(filteredData?.length / rowsPerPage)}
-                page={currentPage} onChange={handlePageChange} color="secondary" className="pagination" />
+              <Pagination
+                count={Math.ceil(filteredData.length / rowsPerPage)}
+                page={currentPage}
+                onChange={handlePageChange}
+                color="secondary"
+              />
             </div>
           )}
         </Grid>
-        <Dialog open={openEdit} onClose={handleCloseEdit} classes={{ paper: "dilog_box" }}>
+
+        {/* Edit Dialog */}
+        <Dialog open={openEdit} onClose={handleCloseEdit}>
           <DialogTitle>Edit Category</DialogTitle>
           <DialogContent>
             <TextField
@@ -323,12 +346,15 @@ const Categories = () => {
             <Button onClick={handleCloseEdit} color="error" variant="outlined">
               Cancel
             </Button>
-            <Button onClick={handleUpdate} color="success" variant="contained">
+            <Button
+              onClick={handleUpdate}
+              color="success"
+              variant="contained"
+            >
               Update Category
             </Button>
           </DialogActions>
         </Dialog>
-
       </Grid>
     </>
   );
