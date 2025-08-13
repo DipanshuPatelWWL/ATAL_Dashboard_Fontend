@@ -96,10 +96,6 @@ const Products = () => {
     });
   };
 
-  const handleSubmit1 = (e) => {
-    e.preventDefault();
-    console.log(productDetails);
-  };
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   const currentRows = filteredData?.slice(indexOfFirstRow, indexOfLastRow);

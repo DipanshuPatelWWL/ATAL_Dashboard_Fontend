@@ -8,8 +8,6 @@ import Categories from '../pages/categories';
 import Settings from '../pages/Settings';
 import Products from '../pages/Products';
 import Customer from '../pages/Customer';
-import Ingredients from '../pages/Ingredients';
-import CoffeeIngredent from '../pages/coffee/CoffeeIngredent';
 import Faq from '../pages/faq/Faq';
 
 const Dashboard = ({ setIsLoggedIn }) => {
@@ -27,9 +25,7 @@ const Dashboard = ({ setIsLoggedIn }) => {
             <Route path="/categories" element={<Categories />} />
             <Route path="/products" element={<Products />} />
             <Route path="/customer" element={<Customer />} />
-            <Route path="/ingredients" element={<Ingredients />} />
-            <Route path="/coffee" element={<CoffeeIngredent />} />
-            <Route path="/faq" element={<Faq/>} />
+            <Route path="/faq" element={<Faq />} />
           </Routes>
         </Grid>
         <Footer />
